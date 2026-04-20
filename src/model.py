@@ -454,42 +454,40 @@ class Generator(nn.Module):
             B = z_t.size(0)
 
             z_t = torch.flatten(z_t, 0, 1) # B * 2, 2
-            x0_hat = torch.flatten(x0_hat, 0, 1) # B * 2, 2
+            x0_hat = torch.flatten(x0_hat, 0, 1) # B * 2
 
             g_s = self.schedule.computed['g'][idx] # ()
             beta_s = self.schedule.computed['beta'][idx] # ()
             kappa_s = self.schedule.computed['kappa'][idx] # ()
             nu_s = self.schedule.computed['nu'][idx] # ()
-            mu_s = self.schedule.computed['mu'][idx] # ()
+            #mu_s = self.schedule.computed['mu'][idx] # ()
+            alpha_s = self.schedule.computed['alpha'][idx] # ()
+            lmbda_s = self.schedule.computed['lambda'][idx] # ()
 
             f_s = self.schedule.computed['f'][idx] # ()
             r_s = self.schedule.computed['r'][idx] # ()
             
-            z_t = z_t.unsqueeze(-1) # B, 2, 1
+            #z_t = z_t.unsqueeze(-1) # B, 2, 1
 
-            mu_s = (x0_hat.unsqueeze(1) * mu_s.to(x0_hat.device)).unsqueeze(-1) # B, 2, 1
+            u_t = z_t[:, 0] # B * 2
+            v_t = z_t[:, 1] # B * 2
 
-            Sigma_s_inv = 1/(beta_s * nu_s - kappa_s ** 2) * torch.tensor([
-                [nu_s, -kappa_s]
-                , [-kappa_s, beta_s]
+            #mu_s = (x0_hat.unsqueeze(1) * mu_s.to(x0_hat.device)).unsqueeze(-1) # B, 2, 1
+
+            Sigma_backward = g_s * torch.tensor([
+                [1/3 * dt ** 3, -1/2 * dt**2]
+                , [-1/2 * dt**2, dt]
             ]).unsqueeze(0).to(x0_hat.device) # 1, 2, 2
 
-            Sigma_ts_inv = 1/g_s * torch.tensor([
-                [12 / dt ** 3, -6/dt**2]
-                , [-6 / dt**2, 4/dt]
-            ]).unsqueeze(0).to(x0_hat.device) # 1, 2, 2
+            delta_mu_st = dt * torch.stack(
+                (
+                    -v_t
+                    , r_s * u_t + f_s * v_t + (g_s/ (beta_s * nu_s - kappa_s ** 2)) * (-kappa_s * (alpha_s * x0_hat - u_t) + beta_s * (lmbda_s * x0_hat - v_t))
+                )
+                , dim=-1
+            )# B * 2, 2
 
-            Eta = torch.tensor([
-                [1 - 0.5 * r_s * dt ** 2, dt - 0.5 * f_s * dt ** 2]
-                , [-r_s * dt, 1 - f_s * dt]
-            ]).unsqueeze(0).to(x0_hat.device) # 1, 2, 2
-
-            Sigma_st = torch.linalg.inv(Eta.transpose(1, 2) @ Sigma_ts_inv @ Eta + Sigma_s_inv) # 1, 2, 2
-
-            mu_st = Sigma_st @ (Eta.transpose(1,2) @ Sigma_ts_inv @ z_t + Sigma_s_inv @ mu_s) # B, 2, 1
-            mu_st = mu_st.squeeze(-1) # B, 2
-
-            z_s = MultivariateNormal(mu_st, Sigma_st).rsample() # B, 2
+            z_s = MultivariateNormal(z_t + delta_mu_st, Sigma_backward).rsample() # B, 2
 
             z_s = torch.unflatten(z_s, 0, (B, 2))
 
