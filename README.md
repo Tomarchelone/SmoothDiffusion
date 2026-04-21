@@ -1,7 +1,7 @@
 # Smooth Stochastic Generative Diffusion
 Code for research on diffusion generative modelling with smooth sample paths
 
-[Technical Report](https://www.researchgate.net/publication/403649302_Smooth_Stochastic_Generative_Diffusion)
+[Technical Report](https://www.researchgate.net/publication/404050660_Smooth_Stochastic_Generative_Diffusion)
 
 Below is a generation example. Model starts from standard gaussian and generates two gaussians with centers at +-1 and standard deviation of 0.1. Top image shows generation paths, bottom - derivatives of the paths.
 
