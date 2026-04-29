@@ -1,4 +1,4 @@
-# Smooth Stochastic Generative Diffusion
+# Smooth Variational Diffusion and Signal-to-Noise Equivalence
 Code for research on diffusion generative modelling with smooth sample paths
 
 [Technical Report](https://www.researchgate.net/publication/404050660_Smooth_Stochastic_Generative_Diffusion)
