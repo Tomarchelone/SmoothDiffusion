@@ -1,5 +1,5 @@
 # Smooth Variational Diffusion and Signal-to-Noise Ratio Equivalence
-Code for research on diffusion generative modelling with smooth sample paths
+Code for research on diffusion generative modelling with smooth sample paths.
 
 [Technical Report](https://zenodo.org/records/19867345)
 
