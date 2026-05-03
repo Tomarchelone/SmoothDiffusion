@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software or the associated research, please cite it as below."
+title: "Smooth Variational Diffusion and Signal-to-Noise Ratio Equivalence"
+version: 1.0.0
+doi: 10.5281/zenodo.19867345
+date-released: 2026-04-28
+url: "https://github.com/Tomarchelone/Smooth-Variational-Diffusion-and-Signal-to-Noise-Ratio-Equivalence"
+license: "MIT"
+authors:
+  - family-names: "Zolotukhin"
+    given-names: "Denis"
+    email: "zolotuhinden@bk.ru"
+    orcid: "https://orcid.org/0009-0000-7603-9882"
+
+preferred-citation:
+  type: article
+  title: "Smooth Variational Diffusion and Signal-to-Noise Ratio Equivalence"
+  authors:
+    - family-names: "Zolotukhin"
+      given-names: "Denis"
+  doi: "10.5281/zenodo.19867345"
+  year: 2026
+  month: 4
+  url: "https://zenodo.org/records/19867345"
